@@ -1,0 +1,16 @@
+# Node.js dependencies
+frontend/node_modules
+
+# Go dependencies
+backend/bin
+backend/pkg
+
+# Build outputs
+frontend/build
+
+# Git files
+.git
+.gitignore
+
+# OS files
+.DS_Store
