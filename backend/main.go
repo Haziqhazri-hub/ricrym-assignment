@@ -2,7 +2,7 @@ package main
 
 import (
 	"database/db"
-	"database/model"
+	"database/routes"
 
 	"github.com/gin-gonic/gin"
 )
@@ -12,7 +12,7 @@ func main() {
 
 	server := gin.Default()
 
-	model.GenerateFakeData()
+	routes.RegisterRoutes(server)
 
-	server.Run(":5432")
+	server.Run(":8080")
 }
