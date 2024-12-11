@@ -1,8 +1,8 @@
 package main
 
 import (
-	"database/db"
-	"database/routes"
+	"github.com/Haziqhazri-hub/ricrym-assignment/db"
+	"github.com/Haziqhazri-hub/ricrym-assignment/routes"
 
 	"github.com/gin-gonic/gin"
 )

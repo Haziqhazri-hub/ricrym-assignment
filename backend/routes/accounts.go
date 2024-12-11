@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"database/model"
+	"github.com/Haziqhazri-hub/ricrym-assignment/model"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

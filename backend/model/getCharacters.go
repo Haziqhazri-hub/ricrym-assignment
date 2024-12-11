@@ -1,7 +1,7 @@
 package model
 
 import (
-	"database/db"
+	"github.com/Haziqhazri-hub/ricrym-assignment/db"
 )
 
 type Character struct {

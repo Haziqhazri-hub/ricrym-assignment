@@ -2,7 +2,7 @@ package routes
 
 import (
 	"net/http"
-	"database/model"
+	"github.com/Haziqhazri-hub/ricrym-assignment/model"
 	"github.com/gin-gonic/gin"
 	"log"
 	"strconv"
