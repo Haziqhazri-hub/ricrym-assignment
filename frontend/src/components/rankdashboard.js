@@ -16,6 +16,7 @@ const GameRankingDashboard = () => {
       );
       const data = await response.json();
       setPlayers(data.data); // Assuming API returns players in `players`
+      //   console.log(data.data);
       setTotalPages(data.totalPages); // Assuming API returns total pages in `totalPages`
       //   console.log(data.data);
     } catch (error) {
@@ -24,6 +25,31 @@ const GameRankingDashboard = () => {
       setLoading(false);
     }
   };
+
+  const queryUser = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(
+        "https://ricrym-assignment.onrender.com/ranks"
+      );
+      const data = await response.json();
+      //   const name = data[0].username;
+      //   console.log(name.toLowerCase());
+      const results = data.filter((d) =>
+        d.username.toLowerCase().includes(query)
+      );
+      query.length > 0 ? setPlayers(results) : setCurrentPage(1);
+      //   console.log(results);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    queryUser();
+  }, [query]);
 
   // Fetch initial data on page load
   useEffect(() => {
@@ -49,20 +75,19 @@ const GameRankingDashboard = () => {
         <h1 className="text-3xl font-semibold text-center mb-6">
           Players Ranking
         </h1>
-
+        <div className="w-full max-w-md mx-auto mt-8">
+          <input
+            type="text"
+            value={query}
+            onChange={handleInputChange}
+            placeholder="Search for a player..."
+            className="w-full p-3 text-gray-300 bg-gray-800 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          />
+        </div>
         {loading ? (
           <div className="text-center text-xl">Loading...</div>
         ) : (
           <>
-            <div className="w-full max-w-md mx-auto mt-8">
-              <input
-                type="text"
-                value={query}
-                onChange={handleInputChange}
-                placeholder="Search for a player..."
-                className="w-full p-3 text-gray-300 bg-gray-800 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div>
             <div className="overflow-x-auto">
               <table className="min-w-full table-auto">
                 <thead>
@@ -85,25 +110,27 @@ const GameRankingDashboard = () => {
             </div>
 
             {/* Pagination Controls */}
-            <div className="flex justify-between mt-6">
-              <button
-                className="px-4 py-2 bg-blue-500 text-white rounded disabled:bg-gray-500"
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 1}
-              >
-                Previous
-              </button>
-              <span className="self-center text-lg">
-                Page {currentPage} of {totalPages}
-              </span>
-              <button
-                className="px-4 py-2 bg-blue-500 text-white rounded disabled:bg-gray-500"
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPages}
-              >
-                Next
-              </button>
-            </div>
+            {query.length === 0 && (
+              <div className="flex justify-between mt-6">
+                <button
+                  className="px-4 py-2 bg-blue-500 text-white rounded disabled:bg-gray-500"
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                >
+                  Previous
+                </button>
+                <span className="self-center text-lg">
+                  Page {currentPage} of {totalPages}
+                </span>
+                <button
+                  className="px-4 py-2 bg-blue-500 text-white rounded disabled:bg-gray-500"
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                >
+                  Next
+                </button>
+              </div>
+            )}
           </>
         )}
       </div>
