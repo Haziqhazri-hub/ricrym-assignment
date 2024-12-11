@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"math/rand"
+	"os"
 
 	"github.com/jaswdr/faker"
 	_ "github.com/lib/pq"
@@ -13,8 +14,10 @@ import (
 var DB *sql.DB
 
 func InitDB() {
+	dbURL := os.Getenv("DATABASE_URL")
+
 	var err error
-	DB, err = sql.Open("postgres", "host=localhost port=5432 user=postgres password=1234 dbname=user_data sslmode=disable")
+	DB, err = sql.Open("postgres", dbURL)
 	if err != nil{
 		log.Fatal("Failed to connect to database", err)
 	}
