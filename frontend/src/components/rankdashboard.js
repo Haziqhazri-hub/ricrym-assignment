@@ -16,7 +16,7 @@ const GameRankingDashboard = () => {
       const data = await response.json();
       setPlayers(data.data); // Assuming API returns players in `players`
       setTotalPages(data.totalPages); // Assuming API returns total pages in `totalPages`
-      console.log(data.data);
+      //   console.log(data.data);
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
@@ -40,7 +40,7 @@ const GameRankingDashboard = () => {
     <div className="min-h-screen bg-gray-900 text-white flex justify-center items-center">
       <div className="w-full max-w-4xl p-6 bg-gray-800 rounded-lg shadow-lg">
         <h1 className="text-3xl font-semibold text-center mb-6">
-          Game Ranking
+          Players Ranking
         </h1>
 
         {loading ? (

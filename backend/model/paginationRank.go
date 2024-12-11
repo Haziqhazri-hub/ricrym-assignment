@@ -1,9 +1,10 @@
 package model
 
 import (
-	"github.com/Haziqhazri-hub/ricrym-assignment/db"
 	"fmt"
 	"math"
+
+	"github.com/Haziqhazri-hub/ricrym-assignment/db"
 )
 
 type Rank struct {
