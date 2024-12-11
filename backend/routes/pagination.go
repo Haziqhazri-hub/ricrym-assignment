@@ -16,7 +16,7 @@ func getPagination(c *gin.Context) {
 		return
 	}
 
-	pageSize := 6
+	pageSize := 20
 
 	ranks, totalPages, err := model.GetPaginatedRank(page, pageSize)
 	if err != nil {

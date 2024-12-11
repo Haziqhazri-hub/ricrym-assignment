@@ -78,7 +78,7 @@ func generateFakeData() {
 
     faker := faker.New()
 
-    for i := 1; i <= 50; i++ {
+    for i := 1; i <= 800; i++ {
         username := faker.Person().FirstName()
         email := faker.Internet().Email()
 
