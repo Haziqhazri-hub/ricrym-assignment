@@ -5,6 +5,7 @@ const GameRankingDashboard = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1); // Total pages will be fetched from API
   const [loading, setLoading] = useState(true);
+  const [query, setQuery] = useState("");
 
   // Fetch data for a specific page
   const fetchData = async (page) => {
@@ -36,6 +37,12 @@ const GameRankingDashboard = () => {
     }
   };
 
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    setQuery(value);
+    // onSearch(value); // Trigger the search callback as user types
+  };
+
   return (
     <div className="min-h-screen bg-gray-900 text-white flex justify-center items-center">
       <div className="w-full max-w-4xl p-6 bg-gray-800 rounded-lg shadow-lg">
@@ -47,6 +54,15 @@ const GameRankingDashboard = () => {
           <div className="text-center text-xl">Loading...</div>
         ) : (
           <>
+            <div className="w-full max-w-md mx-auto mt-8">
+              <input
+                type="text"
+                value={query}
+                onChange={handleInputChange}
+                placeholder="Search for a player..."
+                className="w-full p-3 text-gray-300 bg-gray-800 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
             <div className="overflow-x-auto">
               <table className="min-w-full table-auto">
                 <thead>

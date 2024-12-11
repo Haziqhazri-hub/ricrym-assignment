@@ -11,4 +11,6 @@ func RegisterRoutes(server *gin.Engine) {
 	server.GET("/characters", getCharacters)
 	server.GET("/pagination/:page", getPagination)
 	server.GET("/search/:username", getUser)
+	server.GET("/ranks", getAllRanksHandler)
+
 }

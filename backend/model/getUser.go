@@ -3,57 +3,46 @@ package model
 import (
 	"database/sql"
 	"fmt"
-	"log"
+	"strings"
 )
 
-type CharacterRank struct {
-	Username  string `json:"username"`
-	Character string `json:"character"`
-	Rank      int    `json:"rank"`
-	Score     int    `json:"score"`
+type UserRanking struct {
+	Username   string `json:"username"`
+	Rank       int    `json:"rank"`
+	TotalScore int    `json:"total_score"`
 }
 
-func SearchUser(db *sql.DB, query string) ([]CharacterRank, error) {
-	var ranks []CharacterRank
+func SearchUser(db *sql.DB, username string) ([]UserRanking, error) {
+	query := `
+		SELECT a.username, 
+		       RANK() OVER (ORDER BY SUM(s.reward_score) DESC) AS rank, 
+		       SUM(s.reward_score) AS total_score
+		FROM account a
+		LEFT JOIN character c ON a.acc_id = c.acc_id
+		LEFT JOIN scores s ON c.char_id = s.char_id
+		WHERE a.username ILIKE $1
+		GROUP BY a.username
+		ORDER BY rank
+		LIMIT 10;
+	`
 
-	searchQuery := `
-SELECT 
-    a.username,
-    SUM(s.reward_score) AS total_score,
-    RANK() OVER (ORDER BY SUM(s.reward_score) DESC) AS rank
-FROM 
-    account a
-JOIN 
-    character c ON a.acc_id = c.acc_id
-JOIN 
-    scores s ON c.char_id = s.char_id
-WHERE 
-    a.username ILIKE $1
-GROUP BY 
-    a.acc_id, a.username
-ORDER BY 
-    total_score DESC;
-`
-	rows, err := db.Query(searchQuery, "%"+query+"%")
+	rows, err := db.Query(query, fmt.Sprintf("%%%s%%", strings.TrimSpace(username)))
 	if err != nil {
-		log.Println("Error querying the database:", err)
-		return nil, fmt.Errorf("could not search for characters")
+		return nil, fmt.Errorf("error querying database: %v", err)
 	}
 	defer rows.Close()
 
+	var rankings []UserRanking
 	for rows.Next() {
-		var rank CharacterRank
-		if err := rows.Scan(&rank.Username, &rank.Character, &rank.Score, &rank.Rank); err != nil {
-			log.Println("Error scanning row:", err)
-			continue
+		var ranking UserRanking
+		if err := rows.Scan(&ranking.Username, &ranking.Rank, &ranking.TotalScore); err != nil {
+			return nil, fmt.Errorf("error scanning row: %w", err)
 		}
-		ranks = append(ranks, rank)
+		rankings = append(rankings, ranking)
 	}
-
 	if err := rows.Err(); err != nil {
-		log.Println("Error with rows:", err)
-		return nil, fmt.Errorf("could not retrieve search results")
+		return nil, fmt.Errorf("error processing rows: %w", err)
 	}
 
-	return ranks, nil
+	return rankings, nil
 }
